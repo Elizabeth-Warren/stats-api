@@ -1,0 +1,56 @@
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  tableName: ${self:custom.stage}Stats
+  basePath: ${self:custom.stage}-stats
+  customDomain:
+    domainName: api.elizabethwarren.codes
+    basePath: ${self:custom.basePath}
+    stage: ${self:custom.stage}
+    createRoute53Record: true
+
+service: stats
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: "*"
+  environment:
+    BASE_PATH: ${self:custom.basePath}
+    STATS_TABLE: ${self:custom.tableName}
+    STATS_CHALLENGE: ${ssm:STATS_CHALLENGE}
+
+plugins:
+  - serverless-domain-manager
+
+functions:
+  api:
+    handler: src/handler.router
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+
+resources:
+  Resources:
+    HotlineTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: key
+            KeyType: HASH
