@@ -28,7 +28,7 @@ module.exports = (dynamoDb) => {
 
     const stat = await dynamoDb.get(params).promise();
 
-    return stat;
+    return stat.Item;
   }
 
   const find = asyncWrap(_find);
