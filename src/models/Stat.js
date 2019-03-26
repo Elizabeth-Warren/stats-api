@@ -20,7 +20,7 @@ module.exports = (dynamoDb) => {
 
   async function _find(key) {
     const params = {
-      TableName: HOTLINE_TABLE,
+      TableName: STATS_TABLE,
       Key: {
         key,
       },

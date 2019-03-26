@@ -6,8 +6,8 @@ const STATS_CHALLENGE = process.env.STATS_CHALLENGE;
 module.exports = ({ app, dynamoDb }) => {
   const Stat = StatModel(dynamoDb);
 
-  app.post('/publish', async ({ success, failed, body }) => {
-    const { challenge, key, value } = body;
+  app.post('/publish', async ({ success, failed, json }) => {
+    const { challenge, key, value } = json;
 
     if (challenge !== STATS_CHALLENGE) {
       return failed(new HttpError('Invalid challenge token'), 401)
