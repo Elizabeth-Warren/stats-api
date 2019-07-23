@@ -1,6 +1,6 @@
-# stats-api
+# (OBSOLETE) stats-api
 
-Simple API to publish and retrieve custom stats.
+Superseded by similar functionality in `toes` (the `generic_kv/value` endpoint). Was a simple API to publish and retrieve custom stats.
 
 ## Local Development
 
